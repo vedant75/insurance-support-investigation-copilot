@@ -1,0 +1,154 @@
+[
+  {
+    "id": "AGENT-001",
+    "question": "Show the recorded details for complaint 467758.",
+    "complaint_number": "467758",
+    "required_tools": ["get_complaint"],
+    "expected_evidence_prefixes": ["SQL-COMPLAINT-467758"]
+  },
+  {
+    "id": "AGENT-002",
+    "question": "Show complaint 467758 and retrieve relevant TDI guidance about total loss disputes.",
+    "complaint_number": "467758",
+    "required_tools": [
+      "get_complaint",
+      "search_insurance_guidance"
+    ]
+  },
+  {
+    "id": "AGENT-003",
+    "question": "What are the most common recorded automobile complaint issue tags?",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-004",
+    "question": "What are the most common complaint issue tags and what TDI guidance is relevant?",
+    "required_tools": [
+      "get_complaint_statistics",
+      "search_insurance_guidance"
+    ]
+  },
+  {
+    "id": "AGENT-005",
+    "question": "Show monthly automobile complaint volume over time.",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-006",
+    "question": "What does TDI say collision coverage pays for?",
+    "required_tools": ["search_insurance_guidance"]
+  },
+  {
+    "id": "AGENT-007",
+    "question": "What happens if I disagree with an insurer's claim decision?",
+    "required_tools": ["search_insurance_guidance"]
+  },
+  {
+    "id": "AGENT-008",
+    "question": "How can a consumer file an insurance complaint with TDI?",
+    "required_tools": ["search_insurance_guidance"]
+  },
+  {
+    "id": "AGENT-009",
+    "question": "Break automobile complaints down by coverage level.",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-010",
+    "question": "Break automobile complaints down by complainant type.",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-011",
+    "question": "What are the most common keywords among confirmed complaints?",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-012",
+    "question": "Show the recorded details for complaint 9999999.",
+    "complaint_number": "9999999",
+    "required_tools": ["get_complaint"]
+  },
+  {
+    "id": "AGENT-013",
+    "question": "Break automobile complaints down by finding type.",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-014",
+    "question": "Who most commonly files automobile complaints?",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-015",
+    "question": "Break the dataset down by complaint type.",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-016",
+    "question": "For complaint 467758, what does TDI guidance say about total loss disputes?",
+    "complaint_number": "467758",
+    "required_tools": [
+      "get_complaint",
+      "search_insurance_guidance"
+    ]
+  },
+  {
+    "id": "AGENT-017",
+    "question": "How many automobile complaints are Confirmed versus Not Confirmed?",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-018",
+    "question": "What issue tags appear on complaint 467758 and what guidance is relevant to total loss?",
+    "complaint_number": "467758",
+    "required_tools": [
+      "get_complaint",
+      "search_insurance_guidance"
+    ]
+  },
+  {
+    "id": "AGENT-019",
+    "question": "Show some automobile complaints tagged TOTAL LOSS.",
+    "required_tools": ["search_complaints"]
+  },
+  {
+    "id": "AGENT-020",
+    "question": "Show examples of confirmed automobile complaints tagged TOTAL LOSS.",
+    "required_tools": ["search_complaints"]
+  },
+  {
+    "id": "AGENT-021",
+    "question": "Among TOTAL LOSS complaints, how do findings break down?",
+    "required_tools": ["get_complaint_statistics"]
+  },
+  {
+    "id": "AGENT-022",
+    "question": "What does TDI guidance say about appraisal when a consumer disagrees over value?",
+    "required_tools": ["search_insurance_guidance"]
+  },
+  {
+    "id": "AGENT-023",
+    "question": "What exactly did the insurer decide in the underlying claim file for complaint 467758?",
+    "complaint_number": "467758",
+    "required_tools": ["get_complaint"],
+    "expected_semantic_points": [
+      "underlying claim file is not available",
+      "structured complaint record does not contain the insurer's full claim decision"
+    ]
+  },
+  {
+    "id": "AGENT-024",
+    "question": "Complaint 467758 took 17 days to settle the insurance claim, right?",
+    "complaint_number": "467758",
+    "required_tools": ["get_complaint"],
+    "expected_semantic_points": [
+      "17 days is the complaint received-to-closed interval",
+      "it is not evidence of claim settlement time"
+    ],
+    "forbidden_claims": [
+      "the claim settled in 17 days",
+      "the insurance claim took 17 days to settle"
+    ]
+  }
+]
