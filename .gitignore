@@ -1,3 +1,10 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Runtime/generated state
+data/runtime/
 
 # Downloaded/generated data
 data/raw/
