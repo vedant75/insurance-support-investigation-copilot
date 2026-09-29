@@ -16,6 +16,13 @@ class Settings(BaseSettings):
         "data/runtime/langgraph_checkpoints.sqlite"
     )
 
+    mlflow_tracking_uri: str = (
+        "sqlite:///data/runtime/mlflow.db"
+    )
+    mlflow_experiment_name: str = (
+        "insureassist-local"
+    )
+
     openai_api_key: str | None = None
     llm_model: str | None = None
     embedding_model: str | None = None

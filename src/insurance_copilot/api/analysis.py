@@ -4,7 +4,7 @@ from insurance_copilot.domain.models import (
     AnalysisResponse,
     AnalyzeRequest,
 )
-from insurance_copilot.workflows.deterministic import (
+from insurance_copilot.services.traced_workflows import (
     run_deterministic_analysis,
 )
 

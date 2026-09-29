@@ -10,6 +10,8 @@ from insurance_copilot.domain.models import (
 )
 from insurance_copilot.services.graph_service import (
     get_graph_state,
+)
+from insurance_copilot.services.traced_workflows import (
     resume_graph_analysis,
     run_graph_analysis,
 )
