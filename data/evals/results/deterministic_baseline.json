@@ -1,0 +1,224 @@
+{
+  "summary": {
+    "workflow": "deterministic_no_llm",
+    "evaluated_at_utc": "2026-09-29T10:38:16.847194+00:00",
+    "case_count": 12,
+    "task_completion_rate": 1.0,
+    "citation_validity_rate": 1.0,
+    "tool_recall_rate": 1.0,
+    "exact_tool_selection_rate": 0.4167,
+    "retrieval_success_rate": 1.0,
+    "latency_ms": {
+      "p50": 2.05,
+      "p95": 12.64,
+      "mean": 4.27
+    },
+    "model_calls": 0,
+    "model_cost_usd": 0.0
+  },
+  "cases": [
+    {
+      "id": "EVAL-001",
+      "question": "Show the recorded details for complaint 467758.",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 20.41,
+      "expected_tools": [
+        "get_complaint"
+      ],
+      "actual_tools": [
+        "get_complaint",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-002",
+      "question": "Show the recorded details for complaint 467758 and retrieve relevant TDI guidance about total loss disputes.",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": true,
+      "retrieval_success": true,
+      "latency_ms": 1.99,
+      "expected_tools": [
+        "get_complaint",
+        "search_insurance_guidance"
+      ],
+      "actual_tools": [
+        "get_complaint",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-003",
+      "question": "What are the most common recorded automobile complaint issue tags?",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 6.29,
+      "expected_tools": [
+        "get_complaint_statistics"
+      ],
+      "actual_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-004",
+      "question": "What are the most common recorded automobile complaint issue tags and what TDI guidance is relevant?",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": true,
+      "retrieval_success": null,
+      "latency_ms": 6.09,
+      "expected_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ],
+      "actual_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-005",
+      "question": "Show monthly automobile complaint volume over time.",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 3.01,
+      "expected_tools": [
+        "get_complaint_statistics"
+      ],
+      "actual_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-006",
+      "question": "What does TDI say collision coverage pays for?",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": true,
+      "retrieval_success": true,
+      "latency_ms": 1.08,
+      "expected_tools": [
+        "search_insurance_guidance"
+      ],
+      "actual_tools": [
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-007",
+      "question": "What happens if I disagree with the insurer's claim decision?",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": true,
+      "retrieval_success": true,
+      "latency_ms": 1.09,
+      "expected_tools": [
+        "search_insurance_guidance"
+      ],
+      "actual_tools": [
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-008",
+      "question": "How can a consumer file an insurance complaint with TDI?",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": true,
+      "retrieval_success": true,
+      "latency_ms": 1.15,
+      "expected_tools": [
+        "search_insurance_guidance"
+      ],
+      "actual_tools": [
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-009",
+      "question": "Break automobile complaints down by coverage level.",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 2.11,
+      "expected_tools": [
+        "get_complaint_statistics"
+      ],
+      "actual_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-010",
+      "question": "Break automobile complaints down by complainant type.",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 1.88,
+      "expected_tools": [
+        "get_complaint_statistics"
+      ],
+      "actual_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-011",
+      "question": "What are the most common keywords among confirmed complaints?",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 4.65,
+      "expected_tools": [
+        "get_complaint_statistics"
+      ],
+      "actual_tools": [
+        "get_complaint_statistics",
+        "search_insurance_guidance"
+      ]
+    },
+    {
+      "id": "EVAL-012",
+      "question": "Show the recorded details for complaint 9999999.",
+      "task_complete": true,
+      "citation_valid": true,
+      "tool_recall_ok": true,
+      "exact_tool_selection": false,
+      "retrieval_success": null,
+      "latency_ms": 1.46,
+      "expected_tools": [
+        "get_complaint"
+      ],
+      "actual_tools": [
+        "get_complaint",
+        "search_insurance_guidance"
+      ]
+    }
+  ]
+}

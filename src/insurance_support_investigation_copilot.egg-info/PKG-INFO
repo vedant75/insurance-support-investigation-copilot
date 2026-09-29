@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: insurance-support-investigation-copilot
+Version: 0.1.0
+Summary: Evidence-grounded AI copilot for investigating insurance support cases.
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+Requires-Dist: beautifulsoup4>=4.15.0
+Requires-Dist: fastapi[standard]>=0.141.1
+Requires-Dist: numpy>=2.3.5
+Requires-Dist: openai>=2.20.0
+Requires-Dist: pandas>=3.0.6
+Requires-Dist: pydantic-settings>=2.15.0
+Requires-Dist: pymupdf>=1.28.2
+Requires-Dist: scikit-learn>=1.9.1
+Requires-Dist: sqlglot>=30.20.0

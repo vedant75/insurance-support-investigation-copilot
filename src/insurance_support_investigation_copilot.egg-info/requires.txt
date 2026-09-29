@@ -1,0 +1,9 @@
+beautifulsoup4>=4.15.0
+fastapi[standard]>=0.141.1
+numpy>=2.3.5
+openai>=2.20.0
+pandas>=3.0.6
+pydantic-settings>=2.15.0
+pymupdf>=1.28.2
+scikit-learn>=1.9.1
+sqlglot>=30.20.0

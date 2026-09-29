@@ -1,0 +1,14 @@
+
+# Downloaded/generated data
+data/raw/
+data/processed/
+data/metadata/
+
+# Downloaded guidance corpus
+data/docs/raw/
+data/docs/processed/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example

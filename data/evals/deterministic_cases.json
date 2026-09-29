@@ -1,0 +1,107 @@
+[
+  {
+    "id": "EVAL-001",
+    "question": "Show the recorded details for complaint 467758.",
+    "complaint_number": "467758",
+    "required_tools": ["get_complaint"],
+    "expected_evidence_prefixes": ["SQL-COMPLAINT-467758"]
+  },
+  {
+    "id": "EVAL-002",
+    "question": "Show the recorded details for complaint 467758 and retrieve relevant TDI guidance about total loss disputes.",
+    "complaint_number": "467758",
+    "required_tools": [
+      "get_complaint",
+      "search_insurance_guidance"
+    ],
+    "expected_evidence_prefixes": [
+      "SQL-COMPLAINT-467758",
+      "TDI-"
+    ],
+    "retrieval_any_of": [
+      "total loss",
+      "totaled",
+      "appraisal"
+    ]
+  },
+  {
+    "id": "EVAL-003",
+    "question": "What are the most common recorded automobile complaint issue tags?",
+    "required_tools": ["get_complaint_statistics"],
+    "expected_evidence_prefixes": ["SQL-STATS-KEYWORD"]
+  },
+  {
+    "id": "EVAL-004",
+    "question": "What are the most common recorded automobile complaint issue tags and what TDI guidance is relevant?",
+    "required_tools": [
+      "get_complaint_statistics",
+      "search_insurance_guidance"
+    ],
+    "expected_evidence_prefixes": [
+      "SQL-STATS-KEYWORD",
+      "TDI-"
+    ]
+  },
+  {
+    "id": "EVAL-005",
+    "question": "Show monthly automobile complaint volume over time.",
+    "required_tools": ["get_complaint_statistics"],
+    "expected_evidence_prefixes": ["SQL-STATS-MONTH"]
+  },
+  {
+    "id": "EVAL-006",
+    "question": "What does TDI say collision coverage pays for?",
+    "required_tools": ["search_insurance_guidance"],
+    "expected_evidence_prefixes": ["TDI-"],
+    "retrieval_any_of": [
+      "collision coverage",
+      "repair or replace"
+    ]
+  },
+  {
+    "id": "EVAL-007",
+    "question": "What happens if I disagree with the insurer's claim decision?",
+    "required_tools": ["search_insurance_guidance"],
+    "expected_evidence_prefixes": ["TDI-"],
+    "retrieval_any_of": [
+      "resolving problems",
+      "appraisal",
+      "disagree"
+    ]
+  },
+  {
+    "id": "EVAL-008",
+    "question": "How can a consumer file an insurance complaint with TDI?",
+    "required_tools": ["search_insurance_guidance"],
+    "expected_evidence_prefixes": ["TDI-"],
+    "retrieval_any_of": [
+      "complaint",
+      "consumer complaint portal"
+    ]
+  },
+  {
+    "id": "EVAL-009",
+    "question": "Break automobile complaints down by coverage level.",
+    "required_tools": ["get_complaint_statistics"],
+    "expected_evidence_prefixes": ["SQL-STATS-COVERAGE_LEVEL"]
+  },
+  {
+    "id": "EVAL-010",
+    "question": "Break automobile complaints down by complainant type.",
+    "required_tools": ["get_complaint_statistics"],
+    "expected_evidence_prefixes": ["SQL-STATS-COMPLAINANT_TYPE"]
+  },
+  {
+    "id": "EVAL-011",
+    "question": "What are the most common keywords among confirmed complaints?",
+    "required_tools": ["get_complaint_statistics"],
+    "expected_evidence_prefixes": ["SQL-STATS-KEYWORD"]
+  },
+  {
+    "id": "EVAL-012",
+    "question": "Show the recorded details for complaint 9999999.",
+    "complaint_number": "9999999",
+    "required_tools": ["get_complaint"],
+    "expected_unresolved_contains": "No complaint record was found"
+  }
+]
