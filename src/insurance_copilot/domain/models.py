@@ -193,3 +193,78 @@ class AnalysisResponse(BaseModel):
     latency_ms: float
 
     report: ComplaintIntelligenceReport
+
+class WorkflowStatus(str, Enum):
+    COMPLETED = "completed"
+    PAUSED_FOR_REVIEW = "paused_for_review"
+    REJECTED = "rejected"
+
+
+class ReviewDecision(str, Enum):
+    APPROVE = "approve"
+    EDIT = "edit"
+    REJECT = "reject"
+
+
+class HumanReviewDecision(BaseModel):
+    decision: ReviewDecision
+
+    reviewer_note: str | None = None
+    edited_summary: str | None = None
+
+    @model_validator(mode="after")
+    def validate_edit(
+        self,
+    ) -> "HumanReviewDecision":
+        if (
+            self.decision == ReviewDecision.EDIT
+            and not self.edited_summary
+        ):
+            raise ValueError(
+                "edited_summary is required "
+                "when decision='edit'"
+            )
+
+        return self
+
+
+class GraphAnalyzeRequest(AnalyzeRequest):
+    require_human_review: bool = False
+    thread_id: str | None = None
+
+
+class ToolFailure(BaseModel):
+    tool_name: str
+    error_type: str
+    message: str
+
+
+class ReviewRequest(BaseModel):
+    reason: str
+
+    question: str
+
+    evidence_count: int
+    tools_used: list[str]
+
+    unresolved_questions: list[str]
+    tool_failures: list[ToolFailure]
+
+
+class GraphAnalysisResponse(BaseModel):
+    thread_id: str
+
+    workflow: str = "langgraph_deterministic"
+    status: WorkflowStatus
+
+    tools_used: list[str]
+    latency_ms: float
+
+    report: ComplaintIntelligenceReport | None = None
+
+    review_request: ReviewRequest | None = None
+    review_decision: HumanReviewDecision | None = None
+
+    tool_failures: list[ToolFailure] = Field(
+        default_factory=list
+    )

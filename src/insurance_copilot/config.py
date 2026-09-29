@@ -8,7 +8,13 @@ class Settings(BaseSettings):
     app_env: str = "development"
     log_level: str = "INFO"
 
-    database_path: Path = Path("data/runtime/complaints.db")
+    database_path: Path = Path(
+        "data/runtime/complaints.db"
+    )
+
+    checkpoint_database_path: Path = Path(
+        "data/runtime/langgraph_checkpoints.sqlite"
+    )
 
     openai_api_key: str | None = None
     llm_model: str | None = None
