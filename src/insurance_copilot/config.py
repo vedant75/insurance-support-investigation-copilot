@@ -15,7 +15,8 @@ class Settings(BaseSettings):
     mlflow_tracking_uri: str = "sqlite:///data/runtime/mlflow.db"
     mlflow_experiment_name: str = "insureassist-local"
 
-    openai_api_key: str | None = None
+    llm_provider: str = "gemini"
+    llm_api_key: str | None = None
     llm_model: str | None = None
     embedding_model: str | None = None
 

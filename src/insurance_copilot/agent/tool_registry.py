@@ -11,7 +11,9 @@ from insurance_copilot.tools.complaints import (
     get_complaint_statistics,
     search_complaints,
 )
-from insurance_copilot.tools.guidance import search_insurance_guidance
+from insurance_copilot.tools.guidance import (
+    search_insurance_guidance_semantic,
+)
 
 
 class GetComplaintArgs(BaseModel):
@@ -132,8 +134,11 @@ def execute_agent_tool(
             limit=validated.limit,
         )
 
-    if isinstance(validated, SearchGuidanceArgs):
-        return search_insurance_guidance(
+    if isinstance(
+        validated,
+        SearchGuidanceArgs,
+    ):
+        return search_insurance_guidance_semantic(
             query=validated.query,
             top_k=validated.top_k,
         )

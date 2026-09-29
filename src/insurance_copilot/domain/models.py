@@ -239,3 +239,15 @@ class GraphAnalysisResponse(BaseModel):
     review_decision: HumanReviewDecision | None = None
 
     tool_failures: list[ToolFailure] = Field(default_factory=list)
+
+
+class AgentAnalysisResponse(GraphAnalysisResponse):
+    workflow: str = "langgraph_agentic"
+
+    model: str
+
+    agent_iterations: int = 0
+
+    model_input_tokens: int = 0
+    model_output_tokens: int = 0
+    model_total_tokens: int = 0

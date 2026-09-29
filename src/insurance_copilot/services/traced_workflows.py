@@ -4,6 +4,7 @@ import mlflow
 from mlflow.entities import SpanType
 
 from insurance_copilot.domain.models import (
+    AgentAnalysisResponse,
     AnalysisResponse,
     AnalyzeRequest,
     GraphAnalysisResponse,
@@ -12,6 +13,12 @@ from insurance_copilot.domain.models import (
 )
 from insurance_copilot.observability.mlflow_config import (
     configure_mlflow,
+)
+from insurance_copilot.services.agent_service import (
+    resume_agent_analysis as _resume_agent_analysis,
+)
+from insurance_copilot.services.agent_service import (
+    run_agent_analysis as _run_agent_analysis,
 )
 from insurance_copilot.services.graph_service import (
     resume_graph_analysis as _resume_graph_analysis,
@@ -55,6 +62,30 @@ def resume_graph_analysis(
     decision: HumanReviewDecision,
 ) -> GraphAnalysisResponse:
     return _resume_graph_analysis(
+        thread_id,
+        decision,
+    )
+
+
+@mlflow.trace(
+    name="agentic_analysis",
+    span_type=SpanType.CHAIN,
+)
+def run_agent_analysis(
+    request: GraphAnalyzeRequest,
+) -> AgentAnalysisResponse:
+    return _run_agent_analysis(request)
+
+
+@mlflow.trace(
+    name="agentic_resume",
+    span_type=SpanType.CHAIN,
+)
+def resume_agent_analysis(
+    thread_id: str,
+    decision: HumanReviewDecision,
+) -> AgentAnalysisResponse:
+    return _resume_agent_analysis(
         thread_id,
         decision,
     )
