@@ -14,30 +14,19 @@ from insurance_copilot.services.graph_service import (
 def test_missing_complaint_is_reported() -> None:
     response = run_graph_analysis(
         GraphAnalyzeRequest(
-            question=(
-                "Show the recorded details "
-                "for complaint 9999999."
-            ),
+            question=("Show the recorded details for complaint 9999999."),
             complaint_number="9999999",
             thread_id=str(uuid4()),
         )
     )
 
-    assert (
-        response.status
-        == WorkflowStatus.COMPLETED
-    )
+    assert response.status == WorkflowStatus.COMPLETED
 
     assert response.report is not None
 
-    unresolved = " ".join(
-        response.report.unresolved_questions
-    )
+    unresolved = " ".join(response.report.unresolved_questions)
 
-    assert (
-        "No complaint record was found"
-        in unresolved
-    )
+    assert "No complaint record was found" in unresolved
 
 
 def test_database_tool_failure_requests_review(
@@ -46,9 +35,7 @@ def test_database_tool_failure_requests_review(
     def injected_failure(
         complaint_number: str,
     ):
-        raise RuntimeError(
-            "Injected database failure"
-        )
+        raise RuntimeError("Injected database failure")
 
     monkeypatch.setattr(
         graph_nodes,
@@ -58,39 +45,23 @@ def test_database_tool_failure_requests_review(
 
     response = run_graph_analysis(
         GraphAnalyzeRequest(
-            question=(
-                "Show complaint 467758."
-            ),
+            question=("Show complaint 467758."),
             complaint_number="467758",
             thread_id=str(uuid4()),
         )
     )
 
-    assert (
-        response.status
-        == WorkflowStatus.PAUSED_FOR_REVIEW
-    )
+    assert response.status == WorkflowStatus.PAUSED_FOR_REVIEW
 
-    assert len(
-        response.tool_failures
-    ) == 1
+    assert len(response.tool_failures) == 1
 
-    assert (
-        response.tool_failures[0].tool_name
-        == "get_complaint"
-    )
+    assert response.tool_failures[0].tool_name == "get_complaint"
 
-    assert (
-        response.tool_failures[0].error_type
-        == "RuntimeError"
-    )
+    assert response.tool_failures[0].error_type == "RuntimeError"
 
     assert response.review_request is not None
 
-    assert (
-        "tool"
-        in response.review_request.reason.lower()
-    )
+    assert "tool" in response.review_request.reason.lower()
 
 
 def test_empty_retrieval_requests_review(
@@ -114,22 +85,13 @@ def test_empty_retrieval_requests_review(
 
     response = run_graph_analysis(
         GraphAnalyzeRequest(
-            question=(
-                "What does TDI say about "
-                "collision coverage?"
-            ),
+            question=("What does TDI say about collision coverage?"),
             thread_id=str(uuid4()),
         )
     )
 
-    assert (
-        response.status
-        == WorkflowStatus.PAUSED_FOR_REVIEW
-    )
+    assert response.status == WorkflowStatus.PAUSED_FOR_REVIEW
 
     assert response.review_request is not None
 
-    assert (
-        "insufficient"
-        in response.review_request.reason.lower()
-    )
+    assert "insufficient" in response.review_request.reason.lower()

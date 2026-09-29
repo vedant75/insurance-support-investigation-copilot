@@ -11,11 +11,7 @@ from insurance_copilot.services.traced_workflows import (
 def main() -> None:
     response = run_graph_analysis(
         GraphAnalyzeRequest(
-            question=(
-                "What are the most common "
-                "recorded automobile complaint "
-                "issue tags?"
-            ),
+            question=("What are the most common recorded automobile complaint issue tags?"),
             thread_id=str(uuid4()),
         )
     )

@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pandas as pd
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 MVP_PATH = PROJECT_ROOT / "data" / "processed" / "auto_complaints_mvp.csv"
@@ -120,10 +119,7 @@ def split_keywords(value: object) -> list[str]:
 
 def load_dataframe(path: Path) -> pd.DataFrame:
     if not path.exists():
-        raise FileNotFoundError(
-            f"{path} does not exist. "
-            "Run scripts/download_data.py first."
-        )
+        raise FileNotFoundError(f"{path} does not exist. Run scripts/download_data.py first.")
 
     df = pd.read_csv(
         path,
@@ -138,9 +134,7 @@ def load_dataframe(path: Path) -> pd.DataFrame:
         )
 
     if df["Complaint number"].duplicated().any():
-        raise ValueError(
-            "Complaint numbers are not unique in the selected dataset."
-        )
+        raise ValueError("Complaint numbers are not unique in the selected dataset.")
 
     return df
 
@@ -165,7 +159,7 @@ def build_database(source_path: Path) -> None:
         keyword_rows = []
 
         for row in df.itertuples(index=False, name=None):
-            record = dict(zip(df.columns, row))
+            record = dict(zip(df.columns, row, strict=True))
 
             received_date = record["Received date"]
             closed_date = record["Closed date"]
@@ -173,17 +167,11 @@ def build_database(source_path: Path) -> None:
             closure_days = None
 
             if pd.notna(received_date) and pd.notna(closed_date):
-                closure_days = int(
-                    (closed_date - received_date).days
-                )
+                closure_days = int((closed_date - received_date).days)
 
-            complaint_number = str(
-                record["Complaint number"]
-            )
+            complaint_number = str(record["Complaint number"])
 
-            keywords = split_keywords(
-                record["Keywords"]
-            )
+            keywords = split_keywords(record["Keywords"])
 
             complaint_rows.append(
                 (
@@ -194,22 +182,15 @@ def build_database(source_path: Path) -> None:
                     record["Complaint type"],
                     record["Coverage type"],
                     record["Coverage level"],
-                    normalize_optional(
-                        record["Others involved"]
-                    ),
+                    normalize_optional(record["Others involved"]),
                     record["Complainant type"],
                     record["Finding type"],
-                    normalize_optional(
-                        record["Keywords"]
-                    ),
+                    normalize_optional(record["Keywords"]),
                     closure_days,
                 )
             )
 
-            keyword_rows.extend(
-                (complaint_number, keyword)
-                for keyword in keywords
-            )
+            keyword_rows.extend((complaint_number, keyword) for keyword in keywords)
 
         connection.executemany(
             """
@@ -245,13 +226,9 @@ def build_database(source_path: Path) -> None:
 
         metadata = {
             "source_file": str(source_path),
-            "database_built_at_utc": (
-                datetime.now(timezone.utc).isoformat()
-            ),
+            "database_built_at_utc": (datetime.now(timezone.utc).isoformat()),
             "complaint_count": str(len(complaint_rows)),
-            "keyword_relationship_count": str(
-                len(keyword_rows)
-            ),
+            "keyword_relationship_count": str(len(keyword_rows)),
         }
 
         connection.executemany(
@@ -264,13 +241,9 @@ def build_database(source_path: Path) -> None:
 
         connection.commit()
 
-        complaint_count = connection.execute(
-            "SELECT COUNT(*) FROM complaints"
-        ).fetchone()[0]
+        complaint_count = connection.execute("SELECT COUNT(*) FROM complaints").fetchone()[0]
 
-        keyword_count = connection.execute(
-            "SELECT COUNT(*) FROM complaint_keywords"
-        ).fetchone()[0]
+        keyword_count = connection.execute("SELECT COUNT(*) FROM complaint_keywords").fetchone()[0]
 
         unique_keywords = connection.execute(
             """

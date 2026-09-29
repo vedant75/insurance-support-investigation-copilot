@@ -7,13 +7,8 @@ from insurance_copilot.api.graph_analysis import (
     router as graph_router,
 )
 
-
 app = FastAPI(
-    title=(
-        "InsureAssist — "
-        "Insurance Complaint "
-        "Intelligence Copilot"
-    ),
+    title=("InsureAssist — Insurance Complaint Intelligence Copilot"),
     version="0.2.0",
     description=(
         "Evidence-grounded complaint "
@@ -24,13 +19,9 @@ app = FastAPI(
 )
 
 
-app.include_router(
-    analysis_router
-)
+app.include_router(analysis_router)
 
-app.include_router(
-    graph_router
-)
+app.include_router(graph_router)
 
 
 @app.get("/")
@@ -44,6 +35,4 @@ def root() -> dict[str, str]:
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {
-        "status": "ok"
-    }
+    return {"status": "ok"}

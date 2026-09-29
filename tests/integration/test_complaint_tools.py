@@ -33,21 +33,14 @@ def test_keyword_statistics() -> None:
     assert stats.total_matching_complaints == 5000
     assert len(stats.rows) > 0
 
-    assert (
-        stats.rows[0].key
-        == "ADJUSTER'S HANDLING"
-    )
+    assert stats.rows[0].key == "ADJUSTER'S HANDLING"
 
 
 def test_database_is_read_only() -> None:
-    connection = connect_read_only(
-        get_settings().database_path
-    )
+    connection = connect_read_only(get_settings().database_path)
 
     try:
         with pytest.raises(sqlite3.OperationalError):
-            connection.execute(
-                "DELETE FROM complaints"
-            )
+            connection.execute("DELETE FROM complaints")
     finally:
         connection.close()

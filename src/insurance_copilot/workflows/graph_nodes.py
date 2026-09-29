@@ -27,7 +27,6 @@ from insurance_copilot.workflows.state import (
     InvestigationState,
 )
 
-
 BASE_LIMITATIONS = [
     (
         "The TDI public complaint dataset contains "
@@ -64,10 +63,7 @@ def should_search_guidance(
         "appraisal",
     ]
 
-    return any(
-        signal in text
-        for signal in guidance_signals
-    )
+    return any(signal in text for signal in guidance_signals)
 
 
 def initialize_node(
@@ -75,44 +71,24 @@ def initialize_node(
 ) -> dict[str, Any]:
     request = AnalyzeRequest(
         question=state["question"],
-        complaint_number=state.get(
-            "complaint_number"
-        ),
+        complaint_number=state.get("complaint_number"),
         guidance_top_k=state.get(
             "guidance_top_k",
             3,
         ),
     )
 
-    complaint_number = (
-        extract_complaint_number(
-            request
-        )
-    )
+    complaint_number = extract_complaint_number(request)
 
-    statistics_group = (
-        infer_statistics_group(
-            state["question"]
-        )
-    )
+    statistics_group = infer_statistics_group(state["question"])
 
     return {
         "complaint_number": complaint_number,
-        "statistics_group": (
-            statistics_group.value
-            if statistics_group
-            else None
-        ),
-        "guidance_needed": (
-            should_search_guidance(
-                state["question"]
-            )
-        ),
+        "statistics_group": (statistics_group.value if statistics_group else None),
+        "guidance_needed": (should_search_guidance(state["question"])),
         "evidence": [],
         "insights": [],
-        "limitations": (
-            BASE_LIMITATIONS.copy()
-        ),
+        "limitations": (BASE_LIMITATIONS.copy()),
         "unresolved_questions": [],
         "tools_used": [],
         "tool_failures": [],
@@ -129,9 +105,7 @@ def initialize_node(
 def collect_complaint_node(
     state: InvestigationState,
 ) -> dict[str, Any]:
-    complaint_number = state.get(
-        "complaint_number"
-    )
+    complaint_number = state.get("complaint_number")
 
     if not complaint_number:
         return {}
@@ -141,13 +115,9 @@ def collect_complaint_node(
         "get_complaint",
     ]
 
-    evidence = list(
-        state.get("evidence", [])
-    )
+    evidence = list(state.get("evidence", []))
 
-    insights = list(
-        state.get("insights", [])
-    )
+    insights = list(state.get("insights", []))
 
     unresolved = list(
         state.get(
@@ -164,93 +134,53 @@ def collect_complaint_node(
     )
 
     try:
-        complaint = get_complaint(
-            complaint_number
-        )
+        complaint = get_complaint(complaint_number)
 
     except Exception as exc:
         failures.append(
             {
                 "tool_name": "get_complaint",
-                "error_type": (
-                    type(exc).__name__
-                ),
+                "error_type": (type(exc).__name__),
                 "message": str(exc),
             }
         )
 
         unresolved.append(
-            (
-                "The complaint record could "
-                "not be retrieved because the "
-                "structured-data tool failed."
-            )
+            ("The complaint record could not be retrieved because the structured-data tool failed.")
         )
 
         return {
             "tools_used": tools_used,
             "tool_failures": failures,
-            "unresolved_questions": (
-                unresolved
-            ),
+            "unresolved_questions": (unresolved),
             "missing_evidence": True,
         }
 
     if complaint is None:
-        unresolved.append(
-            (
-                "No complaint record was found "
-                f"for complaint "
-                f"{complaint_number}."
-            )
-        )
+        unresolved.append((f"No complaint record was found for complaint {complaint_number}."))
 
         return {
             "tools_used": tools_used,
-            "unresolved_questions": (
-                unresolved
-            ),
+            "unresolved_questions": (unresolved),
             "missing_evidence": True,
         }
 
-    evidence_id = (
-        "SQL-COMPLAINT-"
-        f"{complaint.complaint_number}"
-    )
+    evidence_id = f"SQL-COMPLAINT-{complaint.complaint_number}"
 
     evidence.append(
         {
             "evidence_id": evidence_id,
-            "evidence_type": (
-                "complaint_record"
-            ),
-            "source": (
-                "TDI complaint database"
-            ),
-            "content": (
-                complaint.model_dump_json()
-            ),
+            "evidence_type": ("complaint_record"),
+            "source": ("TDI complaint database"),
+            "content": (complaint.model_dump_json()),
             "metadata": {
-                "complaint_number": (
-                    complaint
-                    .complaint_number
-                ),
-                "received_date": (
-                    complaint
-                    .received_date
-                    .isoformat()
-                ),
+                "complaint_number": (complaint.complaint_number),
+                "received_date": (complaint.received_date.isoformat()),
             },
         }
     )
 
-    keyword_text = (
-        ", ".join(
-            complaint.keywords
-        )
-        if complaint.keywords
-        else "No keywords recorded"
-    )
+    keyword_text = ", ".join(complaint.keywords) if complaint.keywords else "No keywords recorded"
 
     insights.extend(
         [
@@ -263,9 +193,7 @@ def collect_complaint_node(
                     "with issue tags: "
                     f"{keyword_text}."
                 ),
-                "evidence_ids": [
-                    evidence_id
-                ],
+                "evidence_ids": [evidence_id],
             },
             {
                 "statement": (
@@ -279,27 +207,16 @@ def collect_complaint_node(
                     f"{complaint.closure_days} "
                     "days."
                 ),
-                "evidence_ids": [
-                    evidence_id
-                ],
+                "evidence_ids": [evidence_id],
             },
         ]
     )
 
     unresolved.extend(
         [
-            (
-                "What was stated in the "
-                "original complaint narrative?"
-            ),
-            (
-                "What evidence was contained "
-                "in the underlying claim file?"
-            ),
-            (
-                "What policy language applied "
-                "to the individual complainant?"
-            ),
+            ("What was stated in the original complaint narrative?"),
+            ("What evidence was contained in the underlying claim file?"),
+            ("What policy language applied to the individual complainant?"),
         ]
     )
 
@@ -307,18 +224,14 @@ def collect_complaint_node(
         "tools_used": tools_used,
         "evidence": evidence,
         "insights": insights,
-        "unresolved_questions": (
-            unresolved
-        ),
+        "unresolved_questions": (unresolved),
     }
 
 
 def collect_statistics_node(
     state: InvestigationState,
 ) -> dict[str, Any]:
-    group_value = state.get(
-        "statistics_group"
-    )
+    group_value = state.get("statistics_group")
 
     if not group_value:
         return {}
@@ -335,13 +248,9 @@ def collect_statistics_node(
         )
     )
 
-    evidence = list(
-        state.get("evidence", [])
-    )
+    evidence = list(state.get("evidence", []))
 
-    insights = list(
-        state.get("insights", [])
-    )
+    insights = list(state.get("insights", []))
 
     unresolved = list(
         state.get(
@@ -351,35 +260,21 @@ def collect_statistics_node(
     )
 
     try:
-        group_by = (
-            StatisticsGroupBy(
-                group_value
-            )
-        )
+        group_by = StatisticsGroupBy(group_value)
 
-        filters: ComplaintFilters = (
-            infer_filters(
-                state["question"]
-            )
-        )
+        filters: ComplaintFilters = infer_filters(state["question"])
 
-        statistics = (
-            get_complaint_statistics(
-                filters=filters,
-                group_by=group_by,
-                limit=10,
-            )
+        statistics = get_complaint_statistics(
+            filters=filters,
+            group_by=group_by,
+            limit=10,
         )
 
     except Exception as exc:
         failures.append(
             {
-                "tool_name": (
-                    "get_complaint_statistics"
-                ),
-                "error_type": (
-                    type(exc).__name__
-                ),
+                "tool_name": ("get_complaint_statistics"),
+                "error_type": (type(exc).__name__),
                 "message": str(exc),
             }
         )
@@ -396,82 +291,44 @@ def collect_statistics_node(
         return {
             "tools_used": tools_used,
             "tool_failures": failures,
-            "unresolved_questions": (
-                unresolved
-            ),
+            "unresolved_questions": (unresolved),
             "missing_evidence": True,
         }
 
-    evidence_id = (
-        "SQL-STATS-"
-        f"{group_by.value.upper()}"
-    )
+    evidence_id = f"SQL-STATS-{group_by.value.upper()}"
 
     evidence.append(
         {
             "evidence_id": evidence_id,
-            "evidence_type": (
-                "sql_aggregation"
-            ),
-            "source": (
-                "TDI complaint database"
-            ),
-            "content": (
-                statistics.model_dump_json()
-            ),
+            "evidence_type": ("sql_aggregation"),
+            "source": ("TDI complaint database"),
+            "content": (statistics.model_dump_json()),
             "metadata": {
-                "group_by": (
-                    group_by.value
-                ),
-                "matching_complaints": (
-                    statistics
-                    .total_matching_complaints
-                ),
+                "group_by": (group_by.value),
+                "matching_complaints": (statistics.total_matching_complaints),
             },
         }
     )
 
     if statistics.rows:
-        top_rows = (
-            statistics.rows[:5]
-        )
+        top_rows = statistics.rows[:5]
 
-        formatted = "; ".join(
-            (
-                f"{row.key}: "
-                f"{row.count:,}"
-            )
-            for row in top_rows
-        )
+        formatted = "; ".join((f"{row.key}: {row.count:,}") for row in top_rows)
 
         insights.append(
             {
-                "statement": (
-                    "The leading recorded "
-                    f"{group_by.value} "
-                    "groups are: "
-                    f"{formatted}."
-                ),
-                "evidence_ids": [
-                    evidence_id
-                ],
+                "statement": (f"The leading recorded {group_by.value} groups are: {formatted}."),
+                "evidence_ids": [evidence_id],
             }
         )
     else:
-        unresolved.append(
-            (
-                "The statistics query returned "
-                "no matching complaint groups."
-            )
-        )
+        unresolved.append(("The statistics query returned no matching complaint groups."))
 
     return {
         "tools_used": tools_used,
         "evidence": evidence,
         "insights": insights,
-        "unresolved_questions": (
-            unresolved
-        ),
+        "unresolved_questions": (unresolved),
     }
 
 
@@ -483,13 +340,9 @@ def collect_guidance_node(
         "search_insurance_guidance",
     ]
 
-    evidence = list(
-        state.get("evidence", [])
-    )
+    evidence = list(state.get("evidence", []))
 
-    insights = list(
-        state.get("insights", [])
-    )
+    insights = list(state.get("insights", []))
 
     failures = list(
         state.get(
@@ -506,93 +359,60 @@ def collect_guidance_node(
     )
 
     try:
-        guidance = (
-            search_insurance_guidance(
-                query=state["question"],
-                top_k=state.get(
-                    "guidance_top_k",
-                    3,
-                ),
-            )
+        guidance = search_insurance_guidance(
+            query=state["question"],
+            top_k=state.get(
+                "guidance_top_k",
+                3,
+            ),
         )
 
     except Exception as exc:
         failures.append(
             {
-                "tool_name": (
-                    "search_insurance_guidance"
-                ),
-                "error_type": (
-                    type(exc).__name__
-                ),
+                "tool_name": ("search_insurance_guidance"),
+                "error_type": (type(exc).__name__),
                 "message": str(exc),
             }
         )
 
         unresolved.append(
-            (
-                "Official TDI guidance could "
-                "not be retrieved because the "
-                "retrieval tool failed."
-            )
+            ("Official TDI guidance could not be retrieved because the retrieval tool failed.")
         )
 
         return {
             "tools_used": tools_used,
             "tool_failures": failures,
-            "unresolved_questions": (
-                unresolved
-            ),
+            "unresolved_questions": (unresolved),
             "missing_evidence": True,
             "insufficient_retrieval": True,
         }
 
     if not guidance.hits:
-        unresolved.append(
-            (
-                "No sufficiently relevant "
-                "TDI guidance was retrieved."
-            )
-        )
+        unresolved.append(("No sufficiently relevant TDI guidance was retrieved."))
 
         return {
             "tools_used": tools_used,
-            "unresolved_questions": (
-                unresolved
-            ),
+            "unresolved_questions": (unresolved),
             "insufficient_retrieval": True,
         }
 
     for hit in guidance.hits:
         evidence.append(
             {
-                "evidence_id": (
-                    hit.chunk_id
-                ),
-                "evidence_type": (
-                    "guidance_document"
-                ),
-                "source": (
-                    hit.document_title
-                ),
+                "evidence_id": (hit.chunk_id),
+                "evidence_type": ("guidance_document"),
+                "source": (hit.document_title),
                 "content": hit.text,
                 "metadata": {
-                    "section": (
-                        hit.section_title
-                    ),
-                    "source_url": (
-                        hit.source_url
-                    ),
-                    "retrieval_score": (
-                        hit.score
-                    ),
+                    "section": (hit.section_title),
+                    "source_url": (hit.source_url),
+                    "retrieval_score": (hit.score),
                 },
             }
         )
 
-    strongest_hit = (
-        guidance.hits[0]
-    )
+    strongest_hit = guidance.hits[0]
 
     insights.append(
         {
@@ -603,15 +423,11 @@ def collect_guidance_node(
                 "from "
                 f"{strongest_hit.document_title}."
             ),
-            "evidence_ids": [
-                strongest_hit.chunk_id
-            ],
+            "evidence_ids": [strongest_hit.chunk_id],
         }
     )
 
-    insufficient = (
-        strongest_hit.score < 0.05
-    )
+    insufficient = strongest_hit.score < 0.05
 
     if insufficient:
         unresolved.append(
@@ -627,12 +443,8 @@ def collect_guidance_node(
         "tools_used": tools_used,
         "evidence": evidence,
         "insights": insights,
-        "unresolved_questions": (
-            unresolved
-        ),
-        "insufficient_retrieval": (
-            insufficient
-        ),
+        "unresolved_questions": (unresolved),
+        "insufficient_retrieval": (insufficient),
     }
 
 
@@ -645,40 +457,22 @@ def assess_evidence_node(
         "require_human_review",
         False,
     ):
-        reasons.append(
-            "Human review was explicitly "
-            "requested."
-        )
+        reasons.append("Human review was explicitly requested.")
 
-    if state.get(
-        "tool_failures"
-    ):
-        reasons.append(
-            "One or more tools failed."
-        )
+    if state.get("tool_failures"):
+        reasons.append("One or more tools failed.")
 
     if state.get(
         "insufficient_retrieval",
         False,
     ):
-        reasons.append(
-            "Guidance retrieval was "
-            "insufficient."
-        )
+        reasons.append("Guidance retrieval was insufficient.")
 
-    requires_review = bool(
-        reasons
-    )
+    requires_review = bool(reasons)
 
     return {
-        "requires_review": (
-            requires_review
-        ),
-        "review_reason": (
-            " ".join(reasons)
-            if reasons
-            else None
-        ),
+        "requires_review": (requires_review),
+        "review_reason": (" ".join(reasons) if reasons else None),
     }
 
 
@@ -686,16 +480,9 @@ def human_review_node(
     state: InvestigationState,
 ) -> dict[str, Any]:
     payload = {
-        "reason": (
-            state.get(
-                "review_reason"
-            )
-            or "Human review requested."
-        ),
+        "reason": (state.get("review_reason") or "Human review requested."),
         "question": state["question"],
-        "evidence_count": len(
-            state.get("evidence", [])
-        ),
+        "evidence_count": len(state.get("evidence", [])),
         "tools_used": (
             state.get(
                 "tools_used",
@@ -718,44 +505,26 @@ def human_review_node(
 
     decision = interrupt(
         payload,
-        response_schema=(
-            HumanReviewDecision
-        ),
+        response_schema=(HumanReviewDecision),
     )
 
     if isinstance(
         decision,
         HumanReviewDecision,
     ):
-        decision_data = (
-            decision.model_dump(
-                mode="json"
-            )
-        )
+        decision_data = decision.model_dump(mode="json")
     else:
-        decision_data = dict(
-            decision
-        )
+        decision_data = dict(decision)
 
-    return {
-        "human_review": (
-            decision_data
-        )
-    }
+    return {"human_review": (decision_data)}
 
 
 def finalize_node(
     state: InvestigationState,
 ) -> dict[str, Any]:
-    review = state.get(
-        "human_review"
-    )
+    review = state.get("human_review")
 
-    if (
-        review
-        and review.get("decision")
-        == ReviewDecision.REJECT.value
-    ):
+    if review and review.get("decision") == ReviewDecision.REJECT.value:
         status = "rejected"
 
     else:
@@ -767,74 +536,38 @@ def finalize_node(
         "tools_used",
         [],
     ):
-        summary_parts.append(
-            (
-                "The workflow checked the "
-                "requested complaint record."
-            )
-        )
+        summary_parts.append(("The workflow checked the requested complaint record."))
 
-    if (
-        "get_complaint_statistics"
-        in state.get(
-            "tools_used",
-            [],
-        )
+    if "get_complaint_statistics" in state.get(
+        "tools_used",
+        [],
     ):
         summary_parts.append(
-            (
-                "It calculated complaint "
-                "statistics from the structured "
-                "TDI dataset."
-            )
+            ("It calculated complaint statistics from the structured TDI dataset.")
         )
 
-    if (
-        "search_insurance_guidance"
-        in state.get(
-            "tools_used",
-            [],
-        )
+    if "search_insurance_guidance" in state.get(
+        "tools_used",
+        [],
     ):
+        summary_parts.append(("It retrieved relevant official TDI consumer guidance."))
+
+    if state.get("tool_failures"):
         summary_parts.append(
-            (
-                "It retrieved relevant official "
-                "TDI consumer guidance."
-            )
+            ("One or more evidence tools failed, and those failures were preserved in the result.")
         )
 
-    if state.get(
-        "tool_failures"
-    ):
-        summary_parts.append(
-            (
-                "One or more evidence tools "
-                "failed, and those failures "
-                "were preserved in the result."
-            )
-        )
-
-    summary = " ".join(
-        summary_parts
-    )
+    summary = " ".join(summary_parts)
 
     if not summary:
-        summary = (
-            "The workflow completed without "
-            "collecting external evidence."
-        )
+        summary = "The workflow completed without collecting external evidence."
 
     if (
         review
-        and review.get("decision")
-        == ReviewDecision.EDIT.value
-        and review.get(
-            "edited_summary"
-        )
+        and review.get("decision") == ReviewDecision.EDIT.value
+        and review.get("edited_summary")
     ):
-        summary = review[
-            "edited_summary"
-        ]
+        summary = review["edited_summary"]
 
     report = {
         "question": state["question"],

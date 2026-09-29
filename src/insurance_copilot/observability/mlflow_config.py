@@ -17,10 +17,6 @@ def configure_mlflow() -> None:
         exist_ok=True,
     )
 
-    mlflow.set_tracking_uri(
-        settings.mlflow_tracking_uri
-    )
+    mlflow.set_tracking_uri(settings.mlflow_tracking_uri)
 
-    mlflow.set_experiment(
-        settings.mlflow_experiment_name
-    )
+    mlflow.set_experiment(settings.mlflow_experiment_name)

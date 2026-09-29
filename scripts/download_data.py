@@ -8,11 +8,7 @@ from urllib.request import urlretrieve
 
 import pandas as pd
 
-
-DATASET_URL = (
-    "https://data.texas.gov/api/views/"
-    "jjc8-mxkg/rows.csv?accessType=DOWNLOAD"
-)
+DATASET_URL = "https://data.texas.gov/api/views/jjc8-mxkg/rows.csv?accessType=DOWNLOAD"
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,8 +76,7 @@ def load_dataset() -> pd.DataFrame:
 
     if missing_columns:
         raise ValueError(
-            "Dataset schema changed. Missing expected columns: "
-            f"{sorted(missing_columns)}"
+            f"Dataset schema changed. Missing expected columns: {sorted(missing_columns)}"
         )
 
     return df
@@ -102,11 +97,7 @@ def parse_dates(df: pd.DataFrame) -> pd.DataFrame:
 
 def build_auto_subset(df: pd.DataFrame) -> pd.DataFrame:
     auto = df.loc[
-        df["Coverage type"]
-        .astype("string")
-        .str.strip()
-        .str.casefold()
-        .eq("automobile")
+        df["Coverage type"].astype("string").str.strip().str.casefold().eq("automobile")
     ].copy()
 
     auto = auto.sort_values(
@@ -122,17 +113,9 @@ def top_values(
     series: pd.Series,
     limit: int = 20,
 ) -> dict[str, int]:
-    values = (
-        series.astype("string")
-        .fillna("<MISSING>")
-        .value_counts(dropna=False)
-        .head(limit)
-    )
+    values = series.astype("string").fillna("<MISSING>").value_counts(dropna=False).head(limit)
 
-    return {
-        str(key): int(value)
-        for key, value in values.items()
-    }
+    return {str(key): int(value) for key, value in values.items()}
 
 
 def build_profile(df: pd.DataFrame) -> dict:
@@ -147,66 +130,39 @@ def build_profile(df: pd.DataFrame) -> dict:
         "Others involved",
     ]
 
-    null_counts = {
-        column: int(df[column].isna().sum())
-        for column in df.columns
-    }
+    null_counts = {column: int(df[column].isna().sum()) for column in df.columns}
 
     null_percentages = {
-        column: round(float(df[column].isna().mean() * 100), 2)
-        for column in df.columns
+        column: round(float(df[column].isna().mean() * 100), 2) for column in df.columns
     }
 
-    unique_counts = {
-        column: int(df[column].nunique(dropna=True))
-        for column in df.columns
-    }
+    unique_counts = {column: int(df[column].nunique(dropna=True)) for column in df.columns}
 
     top_value_profile = {
-        column: top_values(df[column])
-        for column in categorical_columns
-        if column in df.columns
+        column: top_values(df[column]) for column in categorical_columns if column in df.columns
     }
 
     received_dates = df["Received date"].dropna()
     closed_dates = df["Closed date"].dropna()
 
-    closure_days = (
-        df["Closed date"] - df["Received date"]
-    ).dt.days
+    closure_days = (df["Closed date"] - df["Received date"]).dt.days
 
-    valid_closure_days = closure_days[
-        closure_days.ge(0)
-    ].dropna()
+    valid_closure_days = closure_days[closure_days.ge(0)].dropna()
 
     return {
         "rows": int(len(df)),
         "columns": list(df.columns),
         "column_count": int(len(df.columns)),
-        "duplicate_complaint_numbers": int(
-            df["Complaint number"].duplicated().sum()
-        ),
+        "duplicate_complaint_numbers": int(df["Complaint number"].duplicated().sum()),
         "date_range": {
             "received_min": (
-                received_dates.min().isoformat()
-                if not received_dates.empty
-                else None
+                received_dates.min().isoformat() if not received_dates.empty else None
             ),
             "received_max": (
-                received_dates.max().isoformat()
-                if not received_dates.empty
-                else None
+                received_dates.max().isoformat() if not received_dates.empty else None
             ),
-            "closed_min": (
-                closed_dates.min().isoformat()
-                if not closed_dates.empty
-                else None
-            ),
-            "closed_max": (
-                closed_dates.max().isoformat()
-                if not closed_dates.empty
-                else None
-            ),
+            "closed_min": (closed_dates.min().isoformat() if not closed_dates.empty else None),
+            "closed_max": (closed_dates.max().isoformat() if not closed_dates.empty else None),
         },
         "closure_time_days": {
             "median": (
@@ -247,10 +203,7 @@ def print_summary(
     print(f"MVP rows:                {len(mvp_df):,}")
     print(f"Columns:                 {len(auto_df.columns)}")
 
-    print(
-        "Duplicate complaint IDs: "
-        f"{profile['duplicate_complaint_numbers']:,}"
-    )
+    print(f"Duplicate complaint IDs: {profile['duplicate_complaint_numbers']:,}")
 
     print(
         "Automobile received range:",
@@ -274,22 +227,13 @@ def print_summary(
         print(f"\nTop values — {column}")
 
         counts = (
-            auto_df[column]
-            .astype("string")
-            .fillna("<MISSING>")
-            .value_counts(dropna=False)
-            .head(10)
+            auto_df[column].astype("string").fillna("<MISSING>").value_counts(dropna=False).head(10)
         )
 
         print(counts.to_string())
 
     print("\nMissingness:")
-    missing = (
-        auto_df.isna()
-        .mean()
-        .mul(100)
-        .sort_values(ascending=False)
-    )
+    missing = auto_df.isna().mean().mul(100).sort_values(ascending=False)
 
     for column, percentage in missing.items():
         print(f"  {column:<25} {percentage:6.2f}%")
@@ -304,11 +248,7 @@ def print_summary(
         "Keywords",
     ]
 
-    print(
-        auto_df[preview_columns]
-        .head()
-        .to_string(index=False)
-    )
+    print(auto_df[preview_columns].head().to_string(index=False))
 
     print("\nGenerated files:")
     print(f"  {RAW_PATH}")
@@ -334,8 +274,7 @@ def main() -> None:
 
     if auto_df.empty:
         raise RuntimeError(
-            "No Automobile records were found. "
-            "Check whether TDI changed Coverage type values."
+            "No Automobile records were found. Check whether TDI changed Coverage type values."
         )
 
     mvp_df = auto_df.head(MVP_SIZE).copy()
@@ -372,8 +311,7 @@ def main() -> None:
         "automobile_rows": int(len(auto_df)),
         "mvp_rows": int(len(mvp_df)),
         "mvp_definition": (
-            f"Latest {MVP_SIZE:,} Automobile complaints "
-            "ordered by Received date descending."
+            f"Latest {MVP_SIZE:,} Automobile complaints ordered by Received date descending."
         ),
     }
 

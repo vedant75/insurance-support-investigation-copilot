@@ -5,6 +5,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field, model_validator
 
+
 class StatisticsGroupBy(str, Enum):
     KEYWORD = "keyword"
     FINDING_TYPE = "finding_type"
@@ -65,6 +66,7 @@ class ComplaintSearchResult(BaseModel):
     total_returned: int
     complaints: list[ComplaintRecord]
 
+
 class GuidanceChunk(BaseModel):
     chunk_id: str
     document_id: str
@@ -94,6 +96,7 @@ class GuidanceSearchResult(BaseModel):
     total_hits: int
     hits: list[GuidanceHit]
 
+
 class EvidenceType(str, Enum):
     COMPLAINT_RECORD = "complaint_record"
     SQL_AGGREGATION = "sql_aggregation"
@@ -115,15 +118,11 @@ class EvidenceItem(BaseModel):
 
 class Insight(BaseModel):
     statement: str
-    evidence_ids: list[str] = Field(
-        default_factory=list
-    )
+    evidence_ids: list[str] = Field(default_factory=list)
 
 
 class AnalyzeRequest(BaseModel):
-    question: str = Field(
-        min_length=3
-    )
+    question: str = Field(min_length=3)
 
     complaint_number: str | None = None
 
@@ -139,49 +138,28 @@ class ComplaintIntelligenceReport(BaseModel):
 
     summary: str
 
-    insights: list[Insight] = Field(
-        default_factory=list
-    )
+    insights: list[Insight] = Field(default_factory=list)
 
-    limitations: list[str] = Field(
-        default_factory=list
-    )
+    limitations: list[str] = Field(default_factory=list)
 
-    unresolved_questions: list[str] = Field(
-        default_factory=list
-    )
+    unresolved_questions: list[str] = Field(default_factory=list)
 
-    evidence: list[EvidenceItem] = Field(
-        default_factory=list
-    )
+    evidence: list[EvidenceItem] = Field(default_factory=list)
 
     @model_validator(mode="after")
     def validate_evidence_references(
         self,
     ) -> "ComplaintIntelligenceReport":
-        available_ids = {
-            item.evidence_id
-            for item in self.evidence
-        }
+        available_ids = {item.evidence_id for item in self.evidence}
 
         referenced_ids = {
-            evidence_id
-            for insight in self.insights
-            for evidence_id
-            in insight.evidence_ids
+            evidence_id for insight in self.insights for evidence_id in insight.evidence_ids
         }
 
-        missing_ids = (
-            referenced_ids
-            - available_ids
-        )
+        missing_ids = referenced_ids - available_ids
 
         if missing_ids:
-            raise ValueError(
-                "Insights reference unknown "
-                "evidence IDs: "
-                f"{sorted(missing_ids)}"
-            )
+            raise ValueError(f"Insights reference unknown evidence IDs: {sorted(missing_ids)}")
 
         return self
 
@@ -193,6 +171,7 @@ class AnalysisResponse(BaseModel):
     latency_ms: float
 
     report: ComplaintIntelligenceReport
+
 
 class WorkflowStatus(str, Enum):
     COMPLETED = "completed"
@@ -216,14 +195,8 @@ class HumanReviewDecision(BaseModel):
     def validate_edit(
         self,
     ) -> "HumanReviewDecision":
-        if (
-            self.decision == ReviewDecision.EDIT
-            and not self.edited_summary
-        ):
-            raise ValueError(
-                "edited_summary is required "
-                "when decision='edit'"
-            )
+        if self.decision == ReviewDecision.EDIT and not self.edited_summary:
+            raise ValueError("edited_summary is required when decision='edit'")
 
         return self
 
@@ -265,6 +238,4 @@ class GraphAnalysisResponse(BaseModel):
     review_request: ReviewRequest | None = None
     review_decision: HumanReviewDecision | None = None
 
-    tool_failures: list[ToolFailure] = Field(
-        default_factory=list
-    )
+    tool_failures: list[ToolFailure] = Field(default_factory=list)

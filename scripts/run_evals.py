@@ -13,22 +13,11 @@ from insurance_copilot.workflows.deterministic import (
     run_deterministic_analysis,
 )
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-CASES_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "evals"
-    / "deterministic_cases.json"
-)
+CASES_PATH = PROJECT_ROOT / "data" / "evals" / "deterministic_cases.json"
 
-RESULTS_DIR = (
-    PROJECT_ROOT
-    / "data"
-    / "evals"
-    / "results"
-)
+RESULTS_DIR = PROJECT_ROOT / "data" / "evals" / "results"
 
 
 def load_cases() -> list[dict]:
@@ -42,38 +31,23 @@ def load_cases() -> list[dict]:
 def citation_valid(
     response,
 ) -> bool:
-    available_ids = {
-        item.evidence_id
-        for item in response.report.evidence
-    }
+    available_ids = {item.evidence_id for item in response.report.evidence}
 
     referenced_ids = {
-        evidence_id
-        for insight in response.report.insights
-        for evidence_id
-        in insight.evidence_ids
+        evidence_id for insight in response.report.insights for evidence_id in insight.evidence_ids
     }
 
-    return referenced_ids.issubset(
-        available_ids
-    )
+    return referenced_ids.issubset(available_ids)
 
 
 def evidence_prefixes_present(
     response,
     prefixes: list[str],
 ) -> bool:
-    evidence_ids = [
-        item.evidence_id
-        for item in response.report.evidence
-    ]
+    evidence_ids = [item.evidence_id for item in response.report.evidence]
 
     return all(
-        any(
-            evidence_id.startswith(prefix)
-            for evidence_id in evidence_ids
-        )
-        for prefix in prefixes
+        any(evidence_id.startswith(prefix) for evidence_id in evidence_ids) for prefix in prefixes
     )
 
 
@@ -84,14 +58,9 @@ def unresolved_expectation_met(
     if expected_text is None:
         return True
 
-    combined = " ".join(
-        response.report.unresolved_questions
-    ).casefold()
+    combined = " ".join(response.report.unresolved_questions).casefold()
 
-    return (
-        expected_text.casefold()
-        in combined
-    )
+    return expected_text.casefold() in combined
 
 
 def retrieval_expectation_met(
@@ -102,10 +71,7 @@ def retrieval_expectation_met(
         return None
 
     guidance_evidence = [
-        item
-        for item in response.report.evidence
-        if item.evidence_type.value
-        == "guidance_document"
+        item for item in response.report.evidence if item.evidence_type.value == "guidance_document"
     ]
 
     searchable_text = " ".join(
@@ -122,11 +88,7 @@ def retrieval_expectation_met(
         for item in guidance_evidence
     )
 
-    return any(
-        term.casefold()
-        in searchable_text
-        for term in expected_terms
-    )
+    return any(term.casefold() in searchable_text for term in expected_terms)
 
 
 def main() -> None:
@@ -144,25 +106,15 @@ def main() -> None:
     for case in cases:
         request = AnalyzeRequest(
             question=case["question"],
-            complaint_number=case.get(
-                "complaint_number"
-            ),
+            complaint_number=case.get("complaint_number"),
             guidance_top_k=3,
         )
 
-        response = (
-            run_deterministic_analysis(
-                request
-            )
-        )
+        response = run_deterministic_analysis(request)
 
-        latencies.append(
-            response.latency_ms
-        )
+        latencies.append(response.latency_ms)
 
-        actual_tools = set(
-            response.tools_used
-        )
+        actual_tools = set(response.tools_used)
 
         required_tools = set(
             case.get(
@@ -171,47 +123,28 @@ def main() -> None:
             )
         )
 
-        tool_recall_ok = (
-            required_tools.issubset(
-                actual_tools
-            )
+        tool_recall_ok = required_tools.issubset(actual_tools)
+
+        exact_tool_selection = actual_tools == required_tools
+
+        prefixes_ok = evidence_prefixes_present(
+            response,
+            case.get(
+                "expected_evidence_prefixes",
+                [],
+            ),
         )
 
-        exact_tool_selection = (
-            actual_tools
-            == required_tools
+        unresolved_ok = unresolved_expectation_met(
+            response,
+            case.get("expected_unresolved_contains"),
         )
 
-        prefixes_ok = (
-            evidence_prefixes_present(
-                response,
-                case.get(
-                    "expected_evidence_prefixes",
-                    [],
-                ),
-            )
-        )
+        citations_ok = citation_valid(response)
 
-        unresolved_ok = (
-            unresolved_expectation_met(
-                response,
-                case.get(
-                    "expected_unresolved_contains"
-                ),
-            )
-        )
-
-        citations_ok = citation_valid(
-            response
-        )
-
-        retrieval_ok = (
-            retrieval_expectation_met(
-                response,
-                case.get(
-                    "retrieval_any_of"
-                ),
-            )
+        retrieval_ok = retrieval_expectation_met(
+            response,
+            case.get("retrieval_any_of"),
         )
 
         task_complete = all(
@@ -226,100 +159,40 @@ def main() -> None:
             {
                 "id": case["id"],
                 "question": case["question"],
-                "task_complete": (
-                    task_complete
-                ),
-                "citation_valid": (
-                    citations_ok
-                ),
-                "tool_recall_ok": (
-                    tool_recall_ok
-                ),
-                "exact_tool_selection": (
-                    exact_tool_selection
-                ),
-                "retrieval_success": (
-                    retrieval_ok
-                ),
-                "latency_ms": (
-                    response.latency_ms
-                ),
-                "expected_tools": sorted(
-                    required_tools
-                ),
-                "actual_tools": (
-                    response.tools_used
-                ),
+                "task_complete": (task_complete),
+                "citation_valid": (citations_ok),
+                "tool_recall_ok": (tool_recall_ok),
+                "exact_tool_selection": (exact_tool_selection),
+                "retrieval_success": (retrieval_ok),
+                "latency_ms": (response.latency_ms),
+                "expected_tools": sorted(required_tools),
+                "actual_tools": (response.tools_used),
             }
         )
 
     total = len(case_results)
 
-    task_completion_rate = (
-        sum(
-            result["task_complete"]
-            for result in case_results
-        )
-        / total
-    )
+    task_completion_rate = sum(result["task_complete"] for result in case_results) / total
 
-    citation_validity_rate = (
-        sum(
-            result["citation_valid"]
-            for result in case_results
-        )
-        / total
-    )
+    citation_validity_rate = sum(result["citation_valid"] for result in case_results) / total
 
-    tool_recall_rate = (
-        sum(
-            result["tool_recall_ok"]
-            for result in case_results
-        )
-        / total
-    )
+    tool_recall_rate = sum(result["tool_recall_ok"] for result in case_results) / total
 
     exact_tool_selection_rate = (
-        sum(
-            result["exact_tool_selection"]
-            for result in case_results
-        )
-        / total
+        sum(result["exact_tool_selection"] for result in case_results) / total
     )
 
-    retrieval_cases = [
-        result
-        for result in case_results
-        if result[
-            "retrieval_success"
-        ]
-        is not None
-    ]
+    retrieval_cases = [result for result in case_results if result["retrieval_success"] is not None]
 
     retrieval_success_rate = (
-        (
-            sum(
-                result[
-                    "retrieval_success"
-                ]
-                for result
-                in retrieval_cases
-            )
-            / len(retrieval_cases)
-        )
+        (sum(result["retrieval_success"] for result in retrieval_cases) / len(retrieval_cases))
         if retrieval_cases
         else None
     )
 
     summary = {
-        "workflow": (
-            "deterministic_no_llm"
-        ),
-        "evaluated_at_utc": (
-            datetime.now(
-                timezone.utc
-            ).isoformat()
-        ),
+        "workflow": ("deterministic_no_llm"),
+        "evaluated_at_utc": (datetime.now(timezone.utc).isoformat()),
         "case_count": total,
         "task_completion_rate": round(
             task_completion_rate,
@@ -342,8 +215,7 @@ def main() -> None:
                 retrieval_success_rate,
                 4,
             )
-            if retrieval_success_rate
-            is not None
+            if retrieval_success_rate is not None
             else None
         ),
         "latency_ms": {
@@ -366,11 +238,7 @@ def main() -> None:
                 2,
             ),
             "mean": round(
-                float(
-                    np.mean(
-                        latencies
-                    )
-                ),
+                float(np.mean(latencies)),
                 2,
             ),
         },
@@ -383,10 +251,7 @@ def main() -> None:
         "cases": case_results,
     }
 
-    output_path = (
-        RESULTS_DIR
-        / "deterministic_baseline.json"
-    )
+    output_path = RESULTS_DIR / "deterministic_baseline.json"
 
     with output_path.open(
         "w",
@@ -400,74 +265,35 @@ def main() -> None:
 
     print()
     print("=" * 70)
-    print(
-        "DETERMINISTIC BASELINE"
-    )
+    print("DETERMINISTIC BASELINE")
     print("=" * 70)
 
-    print(
-        f"Cases:                  "
-        f"{total}"
-    )
+    print(f"Cases:                  {total}")
 
-    print(
-        f"Task completion:        "
-        f"{task_completion_rate:.1%}"
-    )
+    print(f"Task completion:        {task_completion_rate:.1%}")
 
-    print(
-        f"Citation validity:      "
-        f"{citation_validity_rate:.1%}"
-    )
+    print(f"Citation validity:      {citation_validity_rate:.1%}")
 
-    print(
-        f"Tool recall:            "
-        f"{tool_recall_rate:.1%}"
-    )
+    print(f"Tool recall:            {tool_recall_rate:.1%}")
 
-    print(
-        f"Exact tool selection:   "
-        f"{exact_tool_selection_rate:.1%}"
-    )
+    print(f"Exact tool selection:   {exact_tool_selection_rate:.1%}")
 
-    if (
-        retrieval_success_rate
-        is not None
-    ):
-        print(
-            f"Retrieval success:      "
-            f"{retrieval_success_rate:.1%}"
-        )
+    if retrieval_success_rate is not None:
+        print(f"Retrieval success:      {retrieval_success_rate:.1%}")
 
-    print(
-        f"p50 latency:            "
-        f"{summary['latency_ms']['p50']} ms"
-    )
+    print(f"p50 latency:            {summary['latency_ms']['p50']} ms")
 
-    print(
-        f"p95 latency:            "
-        f"{summary['latency_ms']['p95']} ms"
-    )
+    print(f"p95 latency:            {summary['latency_ms']['p95']} ms")
 
-    print(
-        "Model cost/task:        "
-        "$0.0000"
-    )
+    print("Model cost/task:        $0.0000")
 
     print()
-    print(
-        f"Saved → {output_path}"
-    )
+    print(f"Saved → {output_path}")
 
-    print(
-        "\nCases with non-exact "
-        "tool selection:"
-    )
+    print("\nCases with non-exact tool selection:")
 
     for result in case_results:
-        if not result[
-            "exact_tool_selection"
-        ]:
+        if not result["exact_tool_selection"]:
             print(
                 f"  {result['id']}: "
                 f"expected="

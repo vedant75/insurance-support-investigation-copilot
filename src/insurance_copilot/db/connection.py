@@ -11,8 +11,7 @@ def connect_read_only(
 
     if not resolved_path.exists():
         raise FileNotFoundError(
-            f"Database not found: {resolved_path}. "
-            "Run scripts/build_database.py first."
+            f"Database not found: {resolved_path}. Run scripts/build_database.py first."
         )
 
     uri = f"file:{resolved_path}?mode=ro"
@@ -25,12 +24,8 @@ def connect_read_only(
 
     connection.row_factory = sqlite3.Row
 
-    connection.execute(
-        "PRAGMA query_only = ON"
-    )
+    connection.execute("PRAGMA query_only = ON")
 
-    connection.execute(
-        "PRAGMA foreign_keys = ON"
-    )
+    connection.execute("PRAGMA foreign_keys = ON")
 
     return connection

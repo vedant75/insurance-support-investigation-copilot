@@ -21,18 +21,12 @@ def get_complaint(
 ) -> ComplaintRecord | None:
     settings = get_settings()
 
-    connection = connect_read_only(
-        settings.database_path
-    )
+    connection = connect_read_only(settings.database_path)
 
     try:
-        repository = ComplaintRepository(
-            connection
-        )
+        repository = ComplaintRepository(connection)
 
-        return repository.get_complaint(
-            complaint_number
-        )
+        return repository.get_complaint(complaint_number)
 
     finally:
         connection.close()
@@ -44,14 +38,10 @@ def search_complaints(
 ) -> ComplaintSearchResult:
     settings = get_settings()
 
-    connection = connect_read_only(
-        settings.database_path
-    )
+    connection = connect_read_only(settings.database_path)
 
     try:
-        repository = ComplaintRepository(
-            connection
-        )
+        repository = ComplaintRepository(connection)
 
         return repository.search_complaints(
             filters=filters,
@@ -69,14 +59,10 @@ def get_complaint_statistics(
 ) -> ComplaintStatistics:
     settings = get_settings()
 
-    connection = connect_read_only(
-        settings.database_path
-    )
+    connection = connect_read_only(settings.database_path)
 
     try:
-        repository = ComplaintRepository(
-            connection
-        )
+        repository = ComplaintRepository(connection)
 
         return repository.get_statistics(
             filters=filters,

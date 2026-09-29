@@ -8,7 +8,6 @@ from insurance_copilot.services.traced_workflows import (
     run_deterministic_analysis,
 )
 
-
 router = APIRouter(
     prefix="/analyze",
     tags=["analysis"],
@@ -22,6 +21,4 @@ router = APIRouter(
 def analyze(
     request: AnalyzeRequest,
 ) -> AnalysisResponse:
-    return run_deterministic_analysis(
-        request
-    )
+    return run_deterministic_analysis(request)

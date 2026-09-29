@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 from sklearn.feature_extraction.text import (
@@ -22,48 +21,28 @@ class GuidanceIndex:
         self,
         chunks_path: Path,
     ) -> None:
-        self.chunks_path = (
-            chunks_path
-        )
+        self.chunks_path = chunks_path
 
-        self.chunks = (
-            self._load_chunks()
-        )
+        self.chunks = self._load_chunks()
 
         if not self.chunks:
-            raise ValueError(
-                "Guidance corpus contains "
-                "no chunks."
-            )
+            raise ValueError("Guidance corpus contains no chunks.")
 
-        self.vectorizer = (
-            TfidfVectorizer(
-                lowercase=True,
-                stop_words="english",
-                ngram_range=(1, 2),
-                sublinear_tf=True,
-            )
+        self.vectorizer = TfidfVectorizer(
+            lowercase=True,
+            stop_words="english",
+            ngram_range=(1, 2),
+            sublinear_tf=True,
         )
 
-        self.matrix = (
-            self.vectorizer.fit_transform(
-                [
-                    self._search_text(
-                        chunk
-                    )
-                    for chunk in (
-                        self.chunks
-                    )
-                ]
-            )
+        self.matrix = self.vectorizer.fit_transform(
+            [self._search_text(chunk) for chunk in (self.chunks)]
         )
 
     def _load_chunks(
         self,
     ) -> list[GuidanceChunk]:
-        if not (
-            self.chunks_path.exists()
-        ):
+        if not (self.chunks_path.exists()):
             raise FileNotFoundError(
                 f"Guidance corpus not found: "
                 f"{self.chunks_path}. "
@@ -72,9 +51,7 @@ class GuidanceIndex:
                 "first."
             )
 
-        chunks: list[
-            GuidanceChunk
-        ] = []
+        chunks: list[GuidanceChunk] = []
 
         with self.chunks_path.open(
             "r",
@@ -86,11 +63,7 @@ class GuidanceIndex:
                 if not line:
                     continue
 
-                chunks.append(
-                    GuidanceChunk.model_validate_json(
-                        line
-                    )
-                )
+                chunks.append(GuidanceChunk.model_validate_json(line))
 
         return chunks
 
@@ -98,11 +71,7 @@ class GuidanceIndex:
     def _search_text(
         chunk: GuidanceChunk,
     ) -> str:
-        return (
-            f"{chunk.document_title} "
-            f"{chunk.section_title} "
-            f"{chunk.text}"
-        )
+        return f"{chunk.document_title} {chunk.section_title} {chunk.text}"
 
     def search(
         self,
@@ -113,60 +82,38 @@ class GuidanceIndex:
         query = query.strip()
 
         if not query:
-            raise ValueError(
-                "query cannot be empty"
-            )
+            raise ValueError("query cannot be empty")
 
         top_k = max(
             1,
             min(top_k, 20),
         )
 
-        query_vector = (
-            self.vectorizer.transform(
-                [query]
-            )
-        )
+        query_vector = self.vectorizer.transform([query])
 
         scores = cosine_similarity(
             query_vector,
             self.matrix,
         )[0]
 
-        ranked_indices = (
-            scores.argsort()[::-1]
-        )
+        ranked_indices = scores.argsort()[::-1]
 
-        hits: list[
-            GuidanceHit
-        ] = []
+        hits: list[GuidanceHit] = []
 
         for index in ranked_indices:
-            score = float(
-                scores[index]
-            )
+            score = float(scores[index])
 
             if score < min_score:
                 continue
 
-            chunk = (
-                self.chunks[index]
-            )
+            chunk = self.chunks[index]
 
             hits.append(
                 GuidanceHit(
-                    chunk_id=(
-                        chunk.chunk_id
-                    ),
-                    document_title=(
-                        chunk.document_title
-                    ),
-                    section_title=(
-                        chunk.section_title
-                    ),
-                    source_url=(
-                        chunk.source_url
-                    ),
+                    chunk_id=(chunk.chunk_id),
+                    document_title=(chunk.document_title),
+                    section_title=(chunk.section_title),
+                    source_url=(chunk.source_url),
                     text=chunk.text,
                     score=round(
                         score,

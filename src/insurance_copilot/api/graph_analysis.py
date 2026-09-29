@@ -16,7 +16,6 @@ from insurance_copilot.services.traced_workflows import (
     run_graph_analysis,
 )
 
-
 router = APIRouter(
     prefix="/graph",
     tags=["langgraph"],
@@ -30,9 +29,7 @@ router = APIRouter(
 def analyze_with_graph(
     request: GraphAnalyzeRequest,
 ) -> GraphAnalysisResponse:
-    return run_graph_analysis(
-        request
-    )
+    return run_graph_analysis(request)
 
 
 @router.post(
@@ -63,9 +60,7 @@ def graph_state(
     thread_id: str,
 ) -> dict:
     try:
-        return get_graph_state(
-            thread_id
-        )
+        return get_graph_state(thread_id)
 
     except ValueError as exc:
         raise HTTPException(

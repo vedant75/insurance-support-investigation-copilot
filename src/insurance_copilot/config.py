@@ -8,20 +8,12 @@ class Settings(BaseSettings):
     app_env: str = "development"
     log_level: str = "INFO"
 
-    database_path: Path = Path(
-        "data/runtime/complaints.db"
-    )
+    database_path: Path = Path("data/runtime/complaints.db")
 
-    checkpoint_database_path: Path = Path(
-        "data/runtime/langgraph_checkpoints.sqlite"
-    )
+    checkpoint_database_path: Path = Path("data/runtime/langgraph_checkpoints.sqlite")
 
-    mlflow_tracking_uri: str = (
-        "sqlite:///data/runtime/mlflow.db"
-    )
-    mlflow_experiment_name: str = (
-        "insureassist-local"
-    )
+    mlflow_tracking_uri: str = "sqlite:///data/runtime/mlflow.db"
+    mlflow_experiment_name: str = "insureassist-local"
 
     openai_api_key: str | None = None
     llm_model: str | None = None

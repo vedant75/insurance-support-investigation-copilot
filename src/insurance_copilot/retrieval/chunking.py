@@ -13,9 +13,7 @@ def chunk_text(
         raise ValueError("overlap cannot be negative")
 
     if overlap >= chunk_size:
-        raise ValueError(
-            "overlap must be smaller than chunk_size"
-        )
+        raise ValueError("overlap must be smaller than chunk_size")
 
     words = text.split()
 
@@ -32,9 +30,7 @@ def chunk_text(
             len(words),
         )
 
-        chunk = " ".join(
-            words[start:end]
-        ).strip()
+        chunk = " ".join(words[start:end]).strip()
 
         if chunk:
             chunks.append(chunk)

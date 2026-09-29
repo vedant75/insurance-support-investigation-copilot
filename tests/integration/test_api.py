@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 
 from insurance_copilot.main import app
 
-
 client = TestClient(app)
 
 
@@ -10,9 +9,7 @@ def test_health() -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
-    assert response.json() == {
-        "status": "ok"
-    }
+    assert response.json() == {"status": "ok"}
 
 
 def test_analyze_complaint_and_guidance() -> None:
@@ -34,27 +31,12 @@ def test_analyze_complaint_and_guidance() -> None:
 
     body = response.json()
 
-    assert (
-        body["workflow"]
-        == "deterministic"
-    )
+    assert body["workflow"] == "deterministic"
 
-    assert (
-        "get_complaint"
-        in body["tools_used"]
-    )
+    assert "get_complaint" in body["tools_used"]
 
-    assert (
-        "search_insurance_guidance"
-        in body["tools_used"]
-    )
+    assert "search_insurance_guidance" in body["tools_used"]
 
-    evidence_ids = {
-        item["evidence_id"]
-        for item in body["report"]["evidence"]
-    }
+    evidence_ids = {item["evidence_id"] for item in body["report"]["evidence"]}
 
-    assert (
-        "SQL-COMPLAINT-467758"
-        in evidence_ids
-    )
+    assert "SQL-COMPLAINT-467758" in evidence_ids

@@ -23,7 +23,6 @@ from insurance_copilot.workflows.deterministic import (
     run_deterministic_analysis as _run_deterministic_analysis,
 )
 
-
 configure_mlflow()
 
 
@@ -34,9 +33,7 @@ configure_mlflow()
 def run_deterministic_analysis(
     request: AnalyzeRequest,
 ) -> AnalysisResponse:
-    return _run_deterministic_analysis(
-        request
-    )
+    return _run_deterministic_analysis(request)
 
 
 @mlflow.trace(
@@ -46,9 +43,7 @@ def run_deterministic_analysis(
 def run_graph_analysis(
     request: GraphAnalyzeRequest,
 ) -> GraphAnalysisResponse:
-    return _run_graph_analysis(
-        request
-    )
+    return _run_graph_analysis(request)
 
 
 @mlflow.trace(

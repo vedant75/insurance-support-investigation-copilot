@@ -12,9 +12,6 @@ def test_collision_guidance_returns_results() -> None:
     assert result.total_hits > 0
     assert len(result.hits) > 0
 
-    combined_text = " ".join(
-        hit.text.lower()
-        for hit in result.hits
-    )
+    combined_text = " ".join(hit.text.lower() for hit in result.hits)
 
     assert "collision" in combined_text

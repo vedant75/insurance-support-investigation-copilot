@@ -33,19 +33,13 @@ from insurance_copilot.workflows.state import (
 def route_after_initialize(
     state: InvestigationState,
 ) -> str:
-    if state.get(
-        "complaint_number"
-    ):
+    if state.get("complaint_number"):
         return "collect_complaint"
 
-    if state.get(
-        "statistics_group"
-    ):
+    if state.get("statistics_group"):
         return "collect_statistics"
 
-    if state.get(
-        "guidance_needed"
-    ):
+    if state.get("guidance_needed"):
         return "collect_guidance"
 
     return "assess_evidence"
@@ -54,14 +48,10 @@ def route_after_initialize(
 def route_after_complaint(
     state: InvestigationState,
 ) -> str:
-    if state.get(
-        "statistics_group"
-    ):
+    if state.get("statistics_group"):
         return "collect_statistics"
 
-    if state.get(
-        "guidance_needed"
-    ):
+    if state.get("guidance_needed"):
         return "collect_guidance"
 
     return "assess_evidence"
@@ -70,9 +60,7 @@ def route_after_complaint(
 def route_after_statistics(
     state: InvestigationState,
 ) -> str:
-    if state.get(
-        "guidance_needed"
-    ):
+    if state.get("guidance_needed"):
         return "collect_guidance"
 
     return "assess_evidence"
@@ -93,9 +81,7 @@ def route_after_assessment(
 def build_graph(
     checkpointer: SqliteSaver,
 ):
-    builder = StateGraph(
-        InvestigationState
-    )
+    builder = StateGraph(InvestigationState)
 
     builder.add_node(
         "initialize",
@@ -172,9 +158,7 @@ def build_graph(
         END,
     )
 
-    return builder.compile(
-        checkpointer=checkpointer
-    )
+    return builder.compile(checkpointer=checkpointer)
 
 
 class GraphRuntime:
@@ -192,22 +176,13 @@ class GraphRuntime:
             check_same_thread=False,
         )
 
-        self.checkpointer = (
-            SqliteSaver(
-                self.connection
-            )
-        )
+        self.checkpointer = SqliteSaver(self.connection)
 
-        self.graph = build_graph(
-            self.checkpointer
-        )
+        self.graph = build_graph(self.checkpointer)
 
 
 @lru_cache(maxsize=1)
 def get_graph_runtime() -> GraphRuntime:
     settings = get_settings()
 
-    return GraphRuntime(
-        settings
-        .checkpoint_database_path
-    )
+    return GraphRuntime(settings.checkpoint_database_path)
