@@ -1,7 +1,36 @@
 [project]
 name = "insurance-support-investigation-copilot"
 version = "0.1.0"
-description = "Add your description here"
+description = "Evidence-grounded AI copilot for investigating insurance support cases."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "numpy>=2.3.5",
+    "openai>=2.20.0",
+    "pydantic-settings>=2.15.0",
+    "pymupdf>=1.28.2",
+    "scikit-learn>=1.9.1",
+    "sqlglot>=30.20.0",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.16.9",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
