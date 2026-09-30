@@ -16,6 +16,9 @@ data/metadata/
 data/docs/raw/
 data/docs/processed/
 
+# Partial evaluation progress
+data/evals/results/agent_progress.json
+
 # Local environment / secrets
 .env
 .env.*
