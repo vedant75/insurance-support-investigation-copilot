@@ -5,6 +5,7 @@ __pycache__/
 
 # Runtime/generated state
 data/runtime/
+mlruns/
 
 # Downloaded/generated data
 data/raw/

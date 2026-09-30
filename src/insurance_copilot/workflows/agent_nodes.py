@@ -153,10 +153,31 @@ def execute_agent_tool_node(
         return {}
 
     tool_name = call["tool_name"]
-    arguments = call.get(
-        "arguments",
-        {},
+    arguments = dict(
+        call.get(
+            "arguments",
+            {},
+        )
     )
+
+    if tool_name == "search_insurance_guidance":
+        requested_top_k = state.get(
+            "guidance_top_k",
+            3,
+        )
+
+        model_top_k = arguments.get(
+            "top_k",
+            requested_top_k,
+        )
+
+        arguments["top_k"] = max(
+            1,
+            min(
+                int(model_top_k),
+                int(requested_top_k),
+            ),
+        )
 
     history = list(
         state.get(
