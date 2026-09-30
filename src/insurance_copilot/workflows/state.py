@@ -36,3 +36,16 @@ class InvestigationState(TypedDict, total=False):
     # Final result
     report: dict[str, Any] | None
     status: str
+
+    # Agent state
+    tool_history: list[dict[str, Any]]
+    pending_tool_call: dict[str, Any] | None
+
+    agent_iterations: int
+    max_agent_iterations: int
+
+    model_input_tokens: int
+    model_output_tokens: int
+    model_total_tokens: int
+
+    synthesis: dict[str, Any] | None

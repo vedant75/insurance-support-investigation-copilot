@@ -1,0 +1,458 @@
+{
+  "evaluated_at_utc": "2026-09-30T05:51:40.221964+00:00",
+  "case_count": 8,
+  "tfidf": {
+    "hit_at_1": 0.75,
+    "hit_at_3": 1.0,
+    "mrr": 0.8542
+  },
+  "semantic": {
+    "hit_at_1": 1.0,
+    "hit_at_3": 1.0,
+    "mrr": 1.0
+  },
+  "cases": [
+    {
+      "id": "RET-001",
+      "query": "What if the insurance company totals my car?",
+      "relevant_sections": [
+        "What if the insurance company totals my car?"
+      ],
+      "tfidf_rank": 1,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.2739,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.2535,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        },
+        {
+          "rank": 3,
+          "section": "Will the insurance company pay for a rental car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.2013,
+          "chunk_id": "TDI-AUTO-GUIDE-S026-C001"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.7109,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        },
+        {
+          "rank": 2,
+          "section": "Will the insurance company pay for a rental car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5857,
+          "chunk_id": "TDI-AUTO-GUIDE-S026-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5855,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        }
+      ]
+    },
+    {
+      "id": "RET-002",
+      "query": "The payout for my written-off vehicle seems too low. What can I do?",
+      "relevant_sections": [
+        "What if the insurance company totals my car?",
+        "Resolving problems"
+      ],
+      "tfidf_rank": 3,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "Types of auto coverages",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.0919,
+          "chunk_id": "TDI-AUTO-GUIDE-S004-C001"
+        },
+        {
+          "rank": 2,
+          "section": "Do I need gap insurance?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.0705,
+          "chunk_id": "TDI-AUTO-FAQ-S004-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.0511,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "Resolving problems",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.398,
+          "chunk_id": "TDI-AUTO-GUIDE-S028-C002"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.3949,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.3717,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        }
+      ]
+    },
+    {
+      "id": "RET-003",
+      "query": "Can appraisal help when I disagree with how much the insurer says my vehicle is worth?",
+      "relevant_sections": [
+        "Resolving problems"
+      ],
+      "tfidf_rank": 2,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "Do I need gap insurance?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.2114,
+          "chunk_id": "TDI-AUTO-FAQ-S004-C001"
+        },
+        {
+          "rank": 2,
+          "section": "Resolving problems",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.1217,
+          "chunk_id": "TDI-AUTO-GUIDE-S028-C001"
+        },
+        {
+          "rank": 3,
+          "section": "TDI Insurance Complaint Help",
+          "document": "TDI Insurance Complaint Help",
+          "score": 0.0772,
+          "chunk_id": "TDI-COMPLAINT-HELP-S001-C001"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "Resolving problems",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5908,
+          "chunk_id": "TDI-AUTO-GUIDE-S028-C001"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5159,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5016,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        }
+      ]
+    },
+    {
+      "id": "RET-004",
+      "query": "Can my insurer force me to use its preferred repair shop or aftermarket parts?",
+      "relevant_sections": [
+        "Repair claims"
+      ],
+      "tfidf_rank": 1,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "Repair claims",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.2376,
+          "chunk_id": "TDI-AUTO-GUIDE-S022-C001"
+        },
+        {
+          "rank": 2,
+          "section": "Will the insurance company pay for a rental car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.1022,
+          "chunk_id": "TDI-AUTO-GUIDE-S026-C001"
+        },
+        {
+          "rank": 3,
+          "section": "Am I covered if I\u2019m driving someone else\u2019s car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.0765,
+          "chunk_id": "TDI-AUTO-GUIDE-S008-C002"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "Repair claims",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.4505,
+          "chunk_id": "TDI-AUTO-GUIDE-S022-C001"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.4385,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        },
+        {
+          "rank": 3,
+          "section": "If another driver caused an accident and it was their fault, will their insurance company pay or will mine?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.4287,
+          "chunk_id": "TDI-AUTO-FAQ-S015-C001"
+        }
+      ]
+    },
+    {
+      "id": "RET-005",
+      "query": "How does an insurance company decide whether a damaged car should be totaled?",
+      "relevant_sections": [
+        "How does the insurance company decide if my car should be totaled?"
+      ],
+      "tfidf_rank": 1,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "How does the insurance company decide if my car should be totaled?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.4143,
+          "chunk_id": "TDI-AUTO-FAQ-S016-C001"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.1128,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.1118,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "How does the insurance company decide if my car should be totaled?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.6362,
+          "chunk_id": "TDI-AUTO-FAQ-S016-C001"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5579,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5501,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        }
+      ]
+    },
+    {
+      "id": "RET-006",
+      "query": "How does depreciation affect the actual cash value paid for my damaged vehicle?",
+      "relevant_sections": [
+        "Repair claims",
+        "What if the insurance company totals my car?"
+      ],
+      "tfidf_rank": 1,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "Repair claims",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.3517,
+          "chunk_id": "TDI-AUTO-GUIDE-S022-C001"
+        },
+        {
+          "rank": 2,
+          "section": "How does the insurance company decide if my car should be totaled?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.0873,
+          "chunk_id": "TDI-AUTO-FAQ-S016-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.0816,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "Repair claims",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.6166,
+          "chunk_id": "TDI-AUTO-GUIDE-S022-C001"
+        },
+        {
+          "rank": 2,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5748,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.3734,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        }
+      ]
+    },
+    {
+      "id": "RET-007",
+      "query": "I disagree with the adjuster's estimate and offer. What are my options?",
+      "relevant_sections": [
+        "Resolving problems"
+      ],
+      "tfidf_rank": 1,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "Resolving problems",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.2248,
+          "chunk_id": "TDI-AUTO-GUIDE-S028-C001"
+        },
+        {
+          "rank": 2,
+          "section": "After I file my claim, what happens?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.1816,
+          "chunk_id": "TDI-AUTO-GUIDE-S021-C001"
+        },
+        {
+          "rank": 3,
+          "section": "Do you have a complaint?",
+          "document": "TDI Insurance Complaint Help",
+          "score": 0.0428,
+          "chunk_id": "TDI-COMPLAINT-HELP-S004-C001"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "Resolving problems",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.3763,
+          "chunk_id": "TDI-AUTO-GUIDE-S028-C001"
+        },
+        {
+          "rank": 2,
+          "section": "After I file my claim, what happens?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.3031,
+          "chunk_id": "TDI-AUTO-GUIDE-S021-C001"
+        },
+        {
+          "rank": 3,
+          "section": "Your rights",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.2368,
+          "chunk_id": "TDI-AUTO-GUIDE-S015-C001"
+        }
+      ]
+    },
+    {
+      "id": "RET-008",
+      "query": "Can I keep my totaled vehicle and have salvage value deducted from the payment?",
+      "relevant_sections": [
+        "What if the insurance company totals my car?"
+      ],
+      "tfidf_rank": 1,
+      "semantic_rank": 1,
+      "tfidf_hits": [
+        {
+          "rank": 1,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.1757,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        },
+        {
+          "rank": 2,
+          "section": "How does the insurance company decide if my car should be totaled?",
+          "document": "TDI Auto Insurance FAQ",
+          "score": 0.1473,
+          "chunk_id": "TDI-AUTO-FAQ-S016-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.0844,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        }
+      ],
+      "semantic_hits": [
+        {
+          "rank": 1,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5787,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C001"
+        },
+        {
+          "rank": 2,
+          "section": "Repair claims",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.539,
+          "chunk_id": "TDI-AUTO-GUIDE-S022-C001"
+        },
+        {
+          "rank": 3,
+          "section": "What if the insurance company totals my car?",
+          "document": "TDI Auto Insurance Guide",
+          "score": 0.5308,
+          "chunk_id": "TDI-AUTO-GUIDE-S025-C002"
+        }
+      ]
+    }
+  ]
+}

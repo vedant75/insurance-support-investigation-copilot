@@ -8,6 +8,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV UV_LINK_MODE=copy
+ENV EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
 
 COPY pyproject.toml uv.lock .python-version ./
 
@@ -37,6 +38,7 @@ RUN mkdir -p \
 RUN uv run python scripts/download_data.py \
     && uv run python scripts/build_database.py --full \
     && uv run python scripts/build_guidance_corpus.py \
+    && uv run python scripts/build_semantic_index.py \
     && rm -rf \
         data/raw \
         data/processed \

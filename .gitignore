@@ -5,6 +5,7 @@ __pycache__/
 
 # Runtime/generated state
 data/runtime/
+mlruns/
 
 # Downloaded/generated data
 data/raw/
@@ -14,6 +15,9 @@ data/metadata/
 # Downloaded guidance corpus
 data/docs/raw/
 data/docs/processed/
+
+# Partial evaluation progress
+data/evals/results/agent_progress.json
 
 # Local environment / secrets
 .env
